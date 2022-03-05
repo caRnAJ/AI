@@ -30,8 +30,8 @@ public class AI {
 		addOperationNetwork.setEntryValue(0, a);
 		addOperationNetwork.setEntryValue(1, b);
 		addOperationNetwork.computeResult();
-		Logger.getGlobal().info(String.format("a=%d, b=%d, r=%d", (int) addOperationNetwork.entryNeurons.get(0).value,
-				(int) addOperationNetwork.entryNeurons.get(1).value, (int) addOperationNetwork.resultNeuron.value));
+		Logger.getGlobal().info(String.format("a=%d, b=%d, r=%d", (int) addOperationNetwork.parents.get(0).value,
+				(int) addOperationNetwork.parents.get(1).value, (int) addOperationNetwork.resultNeuron.value));
 	}
 
 }

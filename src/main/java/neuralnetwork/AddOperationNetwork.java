@@ -1,58 +1,39 @@
 package neuralnetwork;
 
-import java.util.logging.Logger;
-
 public class AddOperationNetwork extends NeuralNetwork {
+
+	private static final int TRAIN_CYCLES = 1000;
+	private static final int OPERATIONS_PER_CYCLE = 1000;
 
 	public AddOperationNetwork() {
 		super(2);
+		LOGGER.info("CREATED ADD OPERATION NETWORK");
 	}
 
 	public void train() {
-		int maxDepth = 2000;
-		for (int i = 0; i < maxDepth; i++) {
-			addNewHidden();
-		}
+		LOGGER.info("STARTING TO TRAIN OPERATION NETWORK");
+		double avgTotal = 0;
+		double avgResult = 0;
+		for (int i = 0; i < TRAIN_CYCLES; i++) {
+			for (int j = 0; j < OPERATIONS_PER_CYCLE; j++) {
 
-//		while ((hiddenNeurons.size() < maxDepth )) {
-		for (int i = 0; i < 10000; i++) {
-			// Logger.getGlobal().info(String.format("depth = %d, i=%d",
-			// hiddenNeurons.size(), i));
-			iterate();
-		}
-		Logger.getGlobal().info(String.format("depth = %d", hiddenNeurons.size()));
-		if (!iterate()) {
-		}
-	}
-
-//	}
-
-	private boolean iterate() {
-		int a = (int) (Math.random() * 10000) + 1;
-		int b = (int) (Math.random() * 10000) + 2;
-		entryNeurons.get(0).value = a;
-		entryNeurons.get(1).value = b;
-		int factor = 1;
-//		int result = (int) (resultNeuron.value * factor);
-		double result = resultNeuron.value;
-		int j = 0;
-		while ((Math.abs((result - (a + b))) > 0.000000001)) {
-//		for (int i = 0; i < 10000; i++) {
-			computeResult();
-			resultNeuron.correctValue((a + b));
-//			result = (int) (resultNeuron.value * factor);
-			result = resultNeuron.value;
-			j++;
-			if (j > 50000) {
-				int diff = (int) (100 - (100 * resultNeuron.value / (a + b)));
-//				System.out.println(String.format("a=%d, b=%d, result=%d, diff=%d", a, b, result, diff));
-				System.out.println(String.format("a=%d, b=%d, result=%f, diff=%d", a, b, result, diff));
+				int a = (int) (Math.random() * 1000);
+				int b = (int) (Math.random() * 1000);
+				avgTotal = (avgTotal + ((a + b) / OPERATIONS_PER_CYCLE));
+				parents.get(0).value = a;
+				parents.get(1).value = a;
+				computeResult();
+				avgResult = (avgResult + (resultNeuron.value / OPERATIONS_PER_CYCLE));
+//				LOGGER.info(String.format("i=[%d]/j=[%d] : a=[%d] ; b=[%d], computed result = [%f]", i, j, a, b,
+//						resultNeuron.value));
 			}
+			// LOGGER.info(String.format("avgTotal=[%f], avgResult=[%f]", avgTotal,
+			// avgResult));
+			double diff = (avgTotal - avgResult) / OPERATIONS_PER_CYCLE;
+			LOGGER.info(String.format("%f", diff));
+			resultNeuron.correctValue(diff);
 		}
-//		System.out.println(String.format("diff=%f", (100 / (a + b) * (resultNeuron.value - (a + b)))));
-//		System.out.println(String.format("a=%d, b=%d, result=%f, diff=%f", a, b, resultNeuron.value,
-//				(resultNeuron.value - (a + b))));
-		return true;
+		LOGGER.info("END OF OPERATION NETWORK");
 	}
 
 }
